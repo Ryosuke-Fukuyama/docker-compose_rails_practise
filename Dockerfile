@@ -14,14 +14,11 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     postgresql-client
-    # \
-    # nodejs \
-    # yarn
 
 RUN mkdir /myapp
 WORKDIR /myapp
 
-# RUN bundle config set force_ruby_platform true
+RUN bundle config set --global force_ruby_platform true
 
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
@@ -29,8 +26,11 @@ RUN bundle install
 RUN gem install rubyzip -v "2.3.0"
 RUN gem install webdrivers -v "5.3.0"
 
-COPY package.json /myapp/package.json
-COPY yarn.lock  /myapp/yarn.lock
-RUN yarn install
-
 COPY . /myapp
+
+# COPY entrypoint.sh /usr/bin/
+# RUN chmod +x /usr/bin/entrypoint.sh
+# ENTRYPOINT ["entrypoint.sh"]
+# EXPOSE 3000
+
+# CMD ["rails", "server", "-b", "0.0.0.0"]
